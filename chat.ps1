@@ -28,14 +28,17 @@ $receiveTask = [System.Threading.Tasks.Task]::Run({
 
 Write-Host "Press Ctrl+C to stop the chat"
 
-while ($true) {
-    Write-Host "Enter your message: " -NoNewline
-    $messageToSend = Read-Host
+try {
+    while ($true) {
+        Write-Host "Enter your message: " -NoNewline
+        $messageToSend = Read-Host
 
-    if ($messageToSend -ne "") {
-        $bytes = [System.Text.Encoding]::ASCII.GetBytes($messageToSend)
-        $udpClient.Send($bytes, $bytes.Length, $multicastEndpoint)
-        Write-Host "You: $messageToSend"
+        if ($messageToSend -ne "") {
+            $bytes = [System.Text.Encoding]::ASCII.GetBytes($messageToSend)
+            $udpClient.Send($bytes, $bytes.Length, $multicastEndpoint)
+            Write-Host "You: $messageToSend"
+        }
     }
+} catch {
+    $udpClient.Close()
 }
-
